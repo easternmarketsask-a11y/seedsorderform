@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>東方蔬菜種子預訂</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-dark: #1a3a2a; --bg-cream: #f5f0e8; --accent-green: #2d5a42; --white: #ffffff; --red-new: #d9534f; --text-main: #333333; }
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: var(--bg-cream); color: var(--text-main); margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        header { background-color: var(--primary-dark); color: var(--bg-cream); text-align: center; padding: 2.5rem 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        h1 { font-family: 'Noto Serif TC', serif; margin: 0; font-size: 1.6rem; letter-spacing: 1px; }
+        .container { max-width: 600px; margin: 0 auto; padding: 1rem 1rem 120px; }
+        .user-info { background: var(--white); padding: 1.2rem; border-radius: 15px; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .user-info label { display: block; font-weight: bold; margin-bottom: 0.6rem; color: var(--primary-dark); }
+        .user-info input { width: 100%; padding: 14px; border: 1.5px solid #eee; border-radius: 10px; font-size: 1rem; box-sizing: border-box; }
+        .category-title { font-family: 'Noto Serif TC', serif; font-size: 1.2rem; margin: 2rem 0 1rem; color: var(--primary-dark); display: flex; align-items: center; font-weight: bold; }
+        .category-title::after { content: ""; flex: 1; height: 1px; background: #ddd; margin-left: 10px; }
+        .seed-item { background: var(--white); display: flex; align-items: center; padding: 1rem; margin-bottom: 0.7rem; border-radius: 12px; }
+        .seed-name { flex-grow: 1; font-weight: 500; }
+        .new-badge { background: var(--red-new); color: white; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; margin-left: 6px; }
+        .stepper { display: flex; align-items: center; gap: 15px; }
+        .btn-step { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--primary-dark); background: var(--white); font-size: 1.4rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .count-val { min-width: 28px; text-align: center; font-weight: bold; font-size: 1.2rem; color: var(--accent-green); }
+        .footer-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); padding: 1.2rem; display: flex; justify-content: center; backdrop-filter: blur(10px); z-index: 1000; }
+        .btn-submit { background-color: var(--primary-dark); color: white; border: none; padding: 16px; border-radius: 35px; font-size: 1.1rem; font-weight: bold; width: 100%; max-width: 400px; cursor: pointer; }
+        #success-page { display: none; text-align: center; padding: 4rem 1.5rem; }
+        .summary-card { background: white; padding: 1.5rem; border-radius: 15px; text-align: left; margin: 2rem auto; max-width: 450px; }
+    </style>
+</head>
+<body>
+<div id="booking-form">
+    <header><h1>🥬 東方蔬菜種子預訂</h1></header>
+    <div class="container">
+        <div class="user-info">
+            <label>訂購人姓名 *</label>
+            <input type="text" id="username" placeholder="請填寫姓名" required>
+        </div>
+        <div id="seed-list"></div>
+    </div>
+    <div class="footer-bar"><button class="btn-submit" onclick="submitOrder()">確認提交訂單</button></div>
+</div>
+<div id="success-page" class="container">
+    <div style="font-size: 5rem;">🌱</div>
+    <h2>預訂成功！</h2>
+    <div class="summary-card" id="summary-content"></div>
+    <button onclick="location.reload()" style="padding: 10px 20px; border-radius: 20px; border: 1px solid #ccc; background: none;">再填一單</button>
+</div>
+<script>
+    const FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSdQXYZvIHmu4QtXrueO-wNNk9myMAW4fuZ79o95pihIDP48yA/formResponse";
+    const ID_NAME = "entry.1772702630";
+    const seedIds = { "白羅卜": "entry.45759550", "60羅卜": "entry.45765567", "水羅卜": "entry.45755088", "长水萝卜": "entry.45681910", "红胡羅卜": "entry.45723113", "芜箐": "entry.45662509", "萵筍": "entry.45734741", "紫叶萵筍": "entry.45762085", "甘藍": "entry.45657263", "羽衣甘蓝": "entry.45752852", "莖用芥蘭": "entry.45752686", "奶油白菜": "entry.45729830", "上海白菜": "entry.45744490", "鸡毛菜": "entry.45712870", "台灣白菜": "entry.45760386", "紹菜": "entry.45762802", "长紹菜": "entry.45658679", "油菜心": "entry.45720792", "雪里蕻": "entry.45753332", "大芥菜": "entry.45764507", "紅莧菜": "entry.45727616", "青空心菜": "entry.45748088", "红菜苔": "entry.45744236", "芫荽(香菜)": "entry.45725154", "上海塔古菜": "entry.45749331", "油麥菜": "entry.45696305", "散叶生菜": "entry.45718464", "結球生菜": "entry.45679175", "菠菜": "entry.45747909", "唐芹": "entry.45641838", "青花菜": "entry.45677009", "瑞士叶甜菜": "entry.45678187", "小叶茼蒿": "entry.45750741", "紫糯玉米": "entry.45672203", "糯玉米": "entry.45643359", "紫苏": "entry.45723104", "綠苦瓜": "entry.45747769", "毛瓜": "entry.45672066", "葫芦瓢": "entry.45742776", "红南瓜": "entry.45737532", "绿南瓜": "entry.45751947", "长丝瓜": "entry.45755277", "絲瓜": "entry.45751442", "瓠瓜": "entry.45686662", "刺黃瓜": "entry.45670693", "水果黃瓜": "entry.45730498", "西葫蘆-深綠": "entry.45717711", "西葫蘆-白綠": "entry.45724955", "冬瓜": "entry.45660690", "罗马番茄": "entry.45712967", "大番茄": "entry.45673686", "小番茄": "entry.45765943", "辣椒": "entry.45673687", "红辣椒": "entry.45762063", "甜椒": "entry.45681145", "長茄": "entry.45743516", "架豆": "entry.45678265", "雪豆": "entry.45746380", "甜豆": "entry.45725105", "白不老架豆": "entry.45672211", "四季豆": "entry.45725110", "長豇豆": "entry.45728785", "青扁芸豆": "entry.45729447", "大蔥": "entry.45754885", "細香蔥": "entry.45660287", "九層塔": "entry.45686664", "秋葵": "entry.45692064", "榨菜": "entry.45757913", "落葵": "entry.115509902", "韭菜": "entry.115626358", "西洋菜": "entry.115626539" };
+    const categories = [
+        { title: "🥬 根莖葉菜類", items: ["白羅卜", "60羅卜", "水羅卜", "长水萝卜", "红胡羅卜", "芜箐", "萵筍", "紫叶萵筍"], news: ["长水萝卜", "紫叶萵筍"] },
+        { title: "🥦 甘藍白菜類", items: ["甘藍", "羽衣甘蓝", "莖用芥蘭", "奶油白菜", "上海白菜", "鸡毛菜", "台灣白菜", "紹菜", "长紹菜", "油菜心"], news: ["鸡毛菜"] },
+        { title: "🌿 芥菜香草類", items: ["雪里蕻", "大芥菜", "紅莧菜", "青空心菜", "红菜苔", "芫荽(香菜)", "上海塔古菜", "油麥菜"], news: ["红菜苔"] },
+        { title: "🥗 生菜菠菜類", items: ["散叶生菜", "結球生菜", "菠菜", "唐芹", "青花菜", "瑞士叶甜菜", "小叶茼蒿", "紫糯玉米", "糯玉米", "紫苏"] },
+        { title: "🥒 瓜類", items: ["綠苦瓜", "毛瓜", "葫芦瓢", "红南瓜", "绿南瓜", "长丝瓜", "絲瓜", "瓠瓜", "刺黃瓜", "水果黃瓜", "西葫蘆-深綠", "西葫蘆-白綠", "冬瓜"] },
+        { title: "🍅 茄果類", items: ["罗马番茄", "大番茄", "小番茄", "辣椒", "红辣椒", "甜椒", "長茄"], news: ["罗马番茄"] },
+        { title: "🫘 豆類蔥類及其他", items: ["架豆", "雪豆", "甜豆", "白不老架豆", "四季豆", "長豇豆", "青扁芸豆", "大蔥", "細香蔥", "九層塔", "秋葵", "榨菜", "落葵", "韭菜", "西洋菜"] }
+    ];
+    const counts = {};
+    function init() {
+        const listEl = document.getElementById('seed-list');
+        categories.forEach(cat => {
+            const catTitle = document.createElement('div');
+            catTitle.className = 'category-title';
+            catTitle.innerText = cat.title;
+            listEl.appendChild(catTitle);
+            cat.items.forEach(name => {
+                counts[name] = 0;
+                const item = document.createElement('div');
+                item.className = 'seed-item';
+                item.innerHTML = `<div class="seed-name">${name}${cat.news?.includes(name)?'<span class="new-badge">NEW</span>':''}</div><div class="stepper"><button class="btn-step" onclick="changeCount('${name}',-1)">-</button><span class="count-val" id="val-${name}">0</span><button class="btn-step" onclick="changeCount('${name}',1)">+</button></div>`;
+                listEl.appendChild(item);
+            });
+        });
+    }
+    function changeCount(name, delta) { counts[name] = Math.max(0, counts[name] + delta); document.getElementById(`val-${name}`).innerText = counts[name]; }
+    function submitOrder() {
+        const name = document.getElementById('username').value.trim();
+        if(!name) return alert("請輸入姓名");
+        const selected = Object.entries(counts).filter(([_,v]) => v > 0);
+        if(!selected.length) return alert("請選擇種子");
+        const formData = new URLSearchParams();
+        formData.append(ID_NAME, name);
+        selected.forEach(([n,v]) => formData.append(seedIds[n], v));
+        fetch(FORM_ACTION, { method: 'POST', mode: 'no-cors', body: formData });
+        document.getElementById('booking-form').style.display = 'none';
+        document.getElementById('summary-content').innerHTML = `<p><b>訂購人：</b>${name}</p><ul>${selected.map(([n,v])=>`<li>${n}: ${v} 包</li>`).join('')}</ul>`;
+        document.getElementById('success-page').style.display = 'block';
+        window.scrollTo(0,0);
+    }
+    init();
+</script>
+</body>
+</html>
