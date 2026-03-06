@@ -71,4 +71,94 @@
     <h2 style="font-family: 'Noto Serif TC', serif; color: var(--primary-dark);">預訂成功！</h2>
     <p>您的預訂資訊已發送至後台。</p>
     <div class="summary-card" id="summary-content"></div>
-    <button onclick="location
+    <button onclick="location.reload()" style="background:none; border: 1px solid #ccc; padding: 12px 30px; border-radius: 25px; color: #666; cursor: pointer;">返回重新填寫</button>
+</div>
+
+<script>
+    const FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSdQXYZvIHmu4QtXrueO-wNNk9myMAW4fuZ79o95pihIDP48yA/formResponse";
+    const ID_NAME = "entry.1772702630";
+    
+    // 數據欄位 (Entry IDs)
+    const seedIds = {
+        "白羅卜": "entry.45759550", "60羅卜": "entry.45765567", "水羅卜": "entry.45755088", "长水萝卜": "entry.45681910", "红胡羅卜": "entry.45723113", "芜箐": "entry.45662509", "萵筍": "entry.45734741", "紫叶萵筍": "entry.45762085",
+        "甘藍": "entry.45657263", "羽衣甘蓝": "entry.45752852", "莖用芥蘭": "entry.45752686", "奶油白菜": "entry.45729830", "上海白菜": "entry.45744490", "鸡毛菜": "entry.45712870", "台灣白菜": "entry.45760386", "紹菜": "entry.45762802", "长紹菜": "entry.45658679", "油菜心": "entry.45720792",
+        "雪里蕻": "entry.45753332", "大芥菜": "entry.45764507", "紅莧菜": "entry.45727616", "青空心菜": "entry.45748088", "红菜苔": "entry.45744236", "芫荽(香菜)": "entry.45725154", "上海塔古菜": "entry.45749331", "油麥菜": "entry.45696305",
+        "散叶生菜": "entry.45718464", "结球生菜": "entry.45679175", "菠菜": "entry.45747909", "唐芹": "entry.45641838", "青花菜": "entry.45677009", "瑞士叶甜菜": "entry.45678187", "小叶茼蒿": "entry.45750741", "紫糯玉米": "entry.45672203", "糯玉米": "entry.45643359", "紫苏": "entry.45723104",
+        "綠苦瓜": "entry.45747769", "毛瓜": "entry.45672066", "葫芦瓢": "entry.45742776", "红南瓜": "entry.45737532", "绿南瓜": "entry.45751947", "长絲瓜": "entry.45755277", "絲瓜": "entry.45751442", "瓠瓜": "entry.45686662", "刺黃瓜": "entry.45670693", "水果黃瓜": "entry.45730498", "西葫蘆-深綠": "entry.45717711", "西葫蘆-白綠": "entry.45724955", "冬瓜": "entry.45660690",
+        "罗马番茄": "entry.45712967", "大番茄": "entry.45673686", "小番茄": "entry.45765943", "辣椒": "entry.45673687", "红辣椒": "entry.45762063", "甜椒": "entry.45681145", "長茄": "entry.45743516",
+        "架豆": "entry.45678265", "雪豆": "entry.45746380", "甜豆": "entry.45725105", "白不老架豆": "entry.45672211", "四季豆": "entry.45725110", "長豇豆": "entry.45728785", "青扁芸豆": "entry.45729447", "大蔥": "entry.45754885", "細香蔥": "entry.45660287", "九層塔": "entry.45686664", "秋葵": "entry.45692064", "榨菜": "entry.45757913", "落葵": "entry.115509902", "韭菜": "entry.115626358", "西洋菜": "entry.115626539"
+    };
+
+    const categories = [
+        { title: "🥬 根莖葉菜類", items: ["白羅卜", "60羅卜", "水羅卜", "长水萝卜", "红胡羅卜", "芜箐", "萵筍", "紫叶萵筍"], news: ["长水萝卜", "紫叶萵筍"] },
+        { title: "🥦 甘藍白菜類", items: ["甘藍", "羽衣甘蓝", "莖用芥蘭", "奶油白菜", "上海白菜", "鸡毛菜", "台灣白菜", "紹菜", "长紹菜", "油菜心"], news: ["鸡毛菜"] },
+        { title: "🌿 芥菜香草類", items: ["雪里蕻", "大芥菜", "紅莧菜", "青空心菜", "红菜苔", "芫荽(香菜)", "上海塔古菜", "油麥菜"], news: ["红菜苔"] },
+        { title: "🥗 生菜菠菜類", items: ["散叶生菜", "结球生菜", "菠菜", "唐芹", "青花菜", "瑞士叶甜菜", "小叶茼蒿", "紫糯玉米", "糯玉米", "紫苏"] },
+        { title: "🥒 瓜類", items: ["綠苦瓜", "毛瓜", "葫芦瓢", "红南瓜", "绿南瓜", "长絲瓜", "絲瓜", "瓠瓜", "刺黃瓜", "水果黃瓜", "西葫蘆-深綠", "西葫蘆-白綠", "冬瓜"] },
+        { title: "🍅 茄果類", items: ["罗马番茄", "大番茄", "小番茄", "辣椒", "红辣椒", "甜椒", "長茄"], news: ["罗马番茄"] },
+        { title: "🫘 豆類蔥類及其他", items: ["架豆", "雪豆", "甜豆", "白不老架豆", "四季豆", "長豇豆", "青扁芸豆", "大蔥", "細香蔥", "九層塔", "秋葵", "榨菜", "落葵", "韭菜", "西洋菜"] }
+    ];
+
+    const counts = {};
+
+    function init() {
+        const listEl = document.getElementById('seed-list');
+        categories.forEach(cat => {
+            const catEl = document.createElement('div');
+            catEl.className = 'category-title';
+            catEl.innerText = cat.title;
+            listEl.appendChild(catEl);
+
+            cat.items.forEach(name => {
+                counts[name] = 0;
+                const itemEl = document.createElement('div');
+                itemEl.className = 'seed-item';
+                const isNew = cat.news && cat.news.includes(name);
+                itemEl.innerHTML = `
+                    <div class="seed-name">${name}${isNew ? '<span class="new-badge">NEW</span>' : ''}</div>
+                    <div class="stepper">
+                        <button class="btn-step" onclick="changeCount('${name}', -1)">−</button>
+                        <span class="count-val" id="val-${name}">0</span>
+                        <button class="btn-step" onclick="changeCount('${name}', 1)">+</button>
+                    </div>
+                `;
+                listEl.appendChild(itemEl);
+            });
+        });
+    }
+
+    function changeCount(name, delta) {
+        counts[name] = Math.max(0, counts[name] + delta);
+        document.getElementById(`val-${name}`).innerText = counts[name];
+    }
+
+    function submitOrder() {
+        const nameInput = document.getElementById('username');
+        const name = nameInput.value.trim();
+        if (!name) { alert("請填寫您的名字"); nameInput.focus(); return; }
+
+        const selected = Object.entries(counts).filter(([_, v]) => v > 0);
+        if (selected.length === 0) { alert("請至少選擇一個品種"); return; }
+
+        const formData = new URLSearchParams();
+        formData.append(ID_NAME, name);
+        selected.forEach(([n, v]) => { if(seedIds[n]) formData.append(seedIds[n], v); });
+
+        fetch(FORM_ACTION, { method: 'POST', mode: 'no-cors', body: formData });
+        showSummary(name, selected);
+    }
+
+    function showSummary(name, items) {
+        document.getElementById('booking-form').style.display = 'none';
+        let html = `<p><b>訂購人：</b> ${name}</p><hr style="border:none; border-top:1px solid #eee; margin:15px 0;">`;
+        html += `<p><b>預訂清單：</b></p><ul style="padding-left:20px;">`;
+        items.forEach(([n, v]) => { html += `<li style="margin-bottom:8px;">${n} : <span style="color:var(--accent-green); font-weight:bold;">${v}</span> 包</li>`; });
+        document.getElementById('summary-content').innerHTML = html + `</ul>`;
+        document.getElementById('success-page').style.display = 'block';
+        window.scrollTo(0, 0);
+    }
+
+    init();
+</script>
+</body>
+</html>
