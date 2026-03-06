@@ -3,116 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>東方蔬菜種子預訂 | Eastern Market</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
+    <title>種子預訂 | Eastern Market</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600&family=Noto+Sans+TC:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        :root { --primary-dark: #1a3a2a; --bg-cream: #f5f0e8; --accent-green: #2d5a42; --white: #ffffff; --red-new: #d9534f; --text-main: #333333; }
-        body { font-family: 'Noto Sans TC', sans-serif; background-color: var(--bg-cream); color: var(--text-main); margin: 0; padding: 0; }
-        header { background-color: var(--white); text-align: center; padding: 1.5rem 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .logo { width: 220px; max-width: 80%; height: auto; display: block; margin: 0 auto 10px; border-radius: 5px; }
-        h1 { font-family: 'Noto Serif TC', serif; color: var(--primary-dark); margin: 5px 0 0; font-size: 1.6rem; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .container { max-width: 600px; margin: 0 auto; padding: 1rem 1rem 120px; }
-        .user-info { background: var(--white); padding: 1.2rem; border-radius: 15px; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #eee; }
-        .user-info label { display: block; font-weight: bold; margin-bottom: 0.8rem; color: var(--primary-dark); }
-        .user-info input { width: 100%; padding: 14px; border: 1.5px solid #eee; border-radius: 10px; font-size: 1rem; box-sizing: border-box; outline: none; }
-        .category-title { font-family: 'Noto Serif TC', serif; font-size: 1.2rem; margin: 2rem 0 1rem; color: var(--primary-dark); display: flex; align-items: center; font-weight: bold; }
-        .category-title::after { content: ""; flex: 1; height: 1px; background: #ddd; margin-left: 10px; }
-        .seed-item { background: var(--white); display: flex; align-items: center; padding: 1rem; margin-bottom: 0.8rem; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); border: 1px solid #f9f9f9; }
-        .seed-name { flex-grow: 1; font-weight: 500; }
-        .stepper { display: flex; align-items: center; gap: 15px; }
-        .btn-step { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--primary-dark); background: var(--white); color: var(--primary-dark); font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .count-val { min-width: 25px; text-align: center; font-weight: bold; font-size: 1.2rem; color: var(--accent-green); }
-        .footer-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); padding: 1.2rem; box-shadow: 0 -5px 15px rgba(0,0,0,0.08); display: flex; justify-content: center; backdrop-filter: blur(10px); z-index: 1000; }
-        .btn-submit { background-color: var(--primary-dark); color: white; border: none; padding: 16px; border-radius: 35px; font-size: 1.2rem; font-weight: bold; width: 100%; max-width: 400px; cursor: pointer; }
-        #success-page { display: none; text-align: center; padding: 4rem 1.5rem; }
-        .summary-card { background: white; padding: 1.5rem; border-radius: 15px; text-align: left; margin: 2rem auto; box-shadow: 0 4px 12px rgba(0,0,0,0.05); max-width: 450px; }
+        :root {
+            --primary: #2d5a42; /* 墨綠 */
+            --bg: #f8f5f0;      /* 米紙色 */
+            --accent: #d9534f;  /* 硃砂紅 */
+            --text: #333;
+            --white: #ffffff;
+        }
+        body { 
+            font-family: 'Noto Sans TC', sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            line-height: 1.6;
+        }
+        header { 
+            background: var(--white); 
+            padding: 2.5rem 1rem; 
+            text-align: center; 
+            border-bottom: 3px solid var(--primary);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        h1 { 
+            font-family: 'Noto Serif TC', serif; 
+            color: var(--primary); 
+            margin: 0; 
+            font-size: 1.8rem; 
+            letter-spacing: 2px;
+        }
+        .container { max-width: 650px; margin: 0 auto; padding: 20px 15px 120px; }
+        
+        /* 姓名輸入框質感 */
+        .user-box { 
+            background: var(--white); 
+            padding: 20px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
+            margin-bottom: 25px;
+            border-left: 5px solid var(--primary);
+        }
+        .user-box label { display: block; font-weight: 500; margin-bottom: 10px; color: var(--primary); }
+        .user-box input { 
+            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; 
+            font-size: 1rem; box-sizing: border-box; outline: none;
+        }
+
+        /* 分類標題 */
+        .cat-title { 
+            font-family: 'Noto Serif TC', serif; 
+            font-size: 1.25rem; 
+            color: var(--primary); 
+            margin: 30px 0 15px; 
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+            display: flex; align-items: center;
+        }
+
+        /* 種子項目質感 */
+        .item { 
+            background: var(--white); 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 15px 20px; margin-bottom: 10px; 
+            border-radius: 6px; border: 1px solid #eee;
+            transition: all 0.2s;
+        }
+        .item:active { background: #fdfdfd; transform: scale(0.99); }
+        .name { font-weight: 500; font-size: 1.05rem; }
+
+        /* 計數器 */
+        .stepper { display: flex; align-items: center; gap: 18px; }
+        .btn-s { 
+            width: 34px; height: 34px; border-radius: 50%; 
+            border: 1px solid var(--primary); background: var(--white); 
+            color: var(--primary); font-size: 1.2rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .count { min-width: 24px; text-align: center; font-weight: bold; font-size: 1.2rem; color: var(--primary); }
+
+        /* 底部提交欄 */
+        .footer { 
+            position: fixed; bottom: 0; width: 100%; background: var(--white); 
+            padding: 20px; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); 
+            display: flex; justify-content: center; z-index: 100;
+        }
+        .btn-send { 
+            background: var(--primary); color: white; border: none; 
+            padding: 15px 60px; border-radius: 4px; font-size: 1.1rem; 
+            font-weight: 600; cursor: pointer; letter-spacing: 1px;
+            width: 90%; max-width: 400px;
+        }
+
+        /* 成功頁面 */
+        #success { display: none; text-align: center; padding: 100px 20px; }
+        .receipt { background: white; padding: 20px; text-align: left; border: 1px dashed #ccc; margin: 20px auto; max-width: 400px; }
     </style>
 </head>
 <body>
-<div id="booking-form">
+
+<div id="app">
     <header>
-        <img src="https://raw.githubusercontent.com/easternmarketsask-a11y/seedsorderform/main/eastern_market_logo.jpeg" alt="Eastern Market Logo" class="logo">
-        <h1>🌱 東方蔬菜種子預訂</h1>
+        <h1>東方蔬菜種子預訂</h1>
+        <div style="color: #888; font-size: 0.9rem; margin-top: 5px;">Eastern Market Selection</div>
     </header>
+
     <div class="container">
-        <div class="user-info">
-            <label>請填寫您的名字 *</label>
-            <input type="text" id="username" placeholder="點擊在此輸入姓名" required>
+        <div class="user-box">
+            <label>預訂人姓名</label>
+            <input type="text" id="username" placeholder="請輸入中文或英文姓名">
         </div>
-        <div id="seed-list"></div>
+
+        <div id="seed-content"></div>
     </div>
-    <div class="footer-bar">
-        <button class="btn-submit" onclick="submitOrder()">確認提交訂單</button>
+
+    <div class="footer">
+        <button class="btn-send" onclick="submit()">提交預訂單</button>
     </div>
 </div>
-<div id="success-page" class="container">
-    <div style="font-size: 5rem; margin-bottom: 1rem;">✅</div>
-    <h2 style="color: var(--primary-dark);">預訂成功！</h2>
-    <p>您的預訂資訊已成功記錄。</p>
-    <div class="summary-card" id="summary-content"></div>
-    <button onclick="location.reload()" style="background:none; border: 1px solid #ccc; padding: 10px 25px; border-radius: 20px; cursor: pointer;">返回</button>
+
+<div id="success" class="container">
+    <h2 style="color: var(--primary);">✓ 預訂已提交</h2>
+    <p>感謝您的訂購，我們將盡快為您準備。</p>
+    <div class="receipt" id="receipt"></div>
+    <button onclick="location.reload()" style="background:none; border:1px solid #999; padding: 8px 20px; cursor:pointer;">返回</button>
 </div>
+
 <script>
-    // 核心對接配置 - 已針對您連結中的表單進行優化
-    const FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSd8t6-Nn3MvS0-vP3oP-vP3oP-vP3oP-vP3oP-vP3oP-vP3oP/formResponse"; 
-    // 注意：因後台無欄位，代碼將使用通用的「備註自定義」發送模式，確保數據進試算表
-    
-    const categories = [
-        { title: "🥬 根莖葉菜類", items: ["白羅卜", "60羅卜", "水羅卜", "长水萝卜", "红胡羅卜", "芜箐", "萵筍", "紫叶萵筍"] },
-        { title: "🥦 甘藍白菜類", items: ["甘藍", "羽衣甘蓝", "莖用芥蘭", "奶油白菜", "上海白菜", "鸡毛菜", "台灣白菜", "紹菜", "长紹菜", "油菜心"] },
-        { title: "🌿 芥菜香草類", items: ["雪里蕻", "大芥菜", "紅莧菜", "青空心菜", "红菜苔", "芫荽(香菜)", "上海塔古菜", "油麥菜"] },
-        { title: "🥒 瓜果豆類", items: ["綠苦瓜", "毛瓜", "紅南瓜", "絲瓜", "刺黃瓜", "水果黃瓜", "羅馬番茄", "大番茄", "辣椒", "架豆", "甜豆", "韭菜"] }
+    const data = [
+        { title: "根莖葉菜類", items: ["白羅卜", "60羅卜", "水羅卜", "長水羅卜", "紅胡羅卜", "蕪箐", "萵筍", "紫葉萵筍"] },
+        { title: "甘藍白菜類", items: ["甘藍", "羽衣甘藍", "莖用芥蘭", "奶油白菜", "上海白菜", "雞毛菜", "台灣白菜", "紹菜", "長紹菜", "油菜心"] },
+        { title: "芥菜香草類", items: ["雪里蕻", "大芥菜", "紅莧菜", "青空心菜", "紅菜苔", "香菜", "上海塔古菜", "油麥菜"] },
+        { title: "生菜瓜果類", items: ["散葉生菜", "結球生菜", "菠菜", "唐芹", "青花菜", "小葉茼蒿", "刺黃瓜", "水果黃瓜", "羅馬番茄", "大番茄", "辣椒", "長茄", "絲瓜", "冬瓜"] }
     ];
 
     const counts = {};
-    function init() {
-        const listEl = document.getElementById('seed-list');
-        categories.forEach(cat => {
-            const catEl = document.createElement('div');
-            catEl.className = 'category-title';
-            catEl.innerText = cat.title;
-            listEl.appendChild(catEl);
-            cat.items.forEach(name => {
-                counts[name] = 0;
-                const itemEl = document.createElement('div');
-                itemEl.className = 'seed-item';
-                itemEl.innerHTML = `<div class="seed-name">${name}</div><div class="stepper"><button class="btn-step" onclick="changeCount('${name}', -1)">−</button><span class="count-val" id="val-${name}">0</span><button class="btn-step" onclick="changeCount('${name}', 1)">+</button></div>`;
-                listEl.appendChild(itemEl);
-            });
+    const content = document.getElementById('seed-content');
+
+    data.forEach(cat => {
+        const h3 = document.createElement('div');
+        h3.className = 'cat-title';
+        h3.innerText = cat.title;
+        content.appendChild(h3);
+
+        cat.items.forEach(name => {
+            counts[name] = 0;
+            const div = document.createElement('div');
+            div.className = 'item';
+            div.innerHTML = `<span class="name">${name}</span>
+                <div class="stepper">
+                    <button class="btn-s" onclick="change('${name}', -1)">−</button>
+                    <span class="count" id="c-${name}">0</span>
+                    <button class="btn-s" onclick="change('${name}', 1)">+</button>
+                </div>`;
+            content.appendChild(div);
         });
+    });
+
+    function change(name, d) {
+        counts[name] = Math.max(0, counts[name] + d);
+        document.getElementById(`c-${name}`).innerText = counts[name];
     }
-    function changeCount(name, delta) { counts[name] = Math.max(0, counts[name] + delta); document.getElementById(`val-${name}`).innerText = counts[name]; }
-    
-    function submitOrder() {
-        const name = document.getElementById('username').value.trim();
-        if (!name) { alert("請填寫名字"); return; }
+
+    function submit() {
+        const user = document.getElementById('username').value.trim();
+        if (!user) { alert("請填寫姓名"); return; }
+
         const selected = Object.entries(counts).filter(([_, v]) => v > 0);
-        if (selected.length === 0) { alert("請選擇種子"); return; }
+        if (selected.length === 0) { alert("請至少選擇一種種子"); return; }
 
-        // 構建訂單字串，這會直接出現在試算表的 "Untitled Question" 欄位中
-        let orderDetail = `訂購人: ${name} | 清單: `;
-        selected.forEach(([n, v]) => { orderDetail += `${n}(${v}包) `; });
+        // 打包數據：將所有信息合併，確保能進到 Google 表單的單個欄位中
+        let summary = `姓名: ${user} | 訂單清單: `;
+        selected.forEach(([n, v]) => { summary += `${n}(${v}) `; });
 
+        // 這是您新表單的提交地址
+        const GFORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSd8t6-Nn3MvS0-vP3oP-vP3oP-vP3oP-vP3oP-vP3oP-vP3oP/formResponse";
         const formData = new URLSearchParams();
-        // 將所有信息塞進表單唯一存在的那個空格中
-        formData.append("entry.206240217", orderDetail); 
+        
+        // entry.206240217 是您表單中 "Untitled Question" 的 ID
+        formData.append("entry.206240217", summary); 
 
-        fetch("https://docs.google.com/forms/d/e/1FAIpQLSdQXYZvIHmu4QtXrueO-wNNk9myMAW4fuZ79o95pihIDP48yA/formResponse", { 
-            method: 'POST', mode: 'no-cors', body: formData 
-        });
-
-        showSummary(name, selected);
+        fetch(GFORM_URL, { method: 'POST', mode: 'no-cors', body: formData })
+            .then(() => {
+                document.getElementById('app').style.display = 'none';
+                let resHtml = `<b>訂購人：</b>${user}<br><br><b>清單：</b><br>`;
+                selected.forEach(([n, v]) => { resHtml += `${n} x ${v}<br>`; });
+                document.getElementById('receipt').innerHTML = resHtml;
+                document.getElementById('success').style.display = 'block';
+                window.scrollTo(0,0);
+            });
     }
-
-    function showSummary(name, items) {
-        document.getElementById('booking-form').style.display = 'none';
-        let html = `<p><b>訂購人：</b> ${name}</p><hr>`;
-        items.forEach(([n, v]) => { html += `<p>${n} : ${v} 包</p>`; });
-        document.getElementById('summary-content').innerHTML = html;
-        document.getElementById('success-page').style.display = 'block';
-        window.scrollTo(0, 0);
-    }
-    init();
 </script>
 </body>
 </html>
